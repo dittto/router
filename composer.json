@@ -1,0 +1,17 @@
+{
+    "name": "hydrogen/composer-test-2",
+    "description": "A test to see how composer handles autoload",
+    "version": "1.0.0",
+    "minimum-stability": "dev",
+    "license": "proprietary",
+    "type": "hydrogen-plugin",
+    "autoload": {
+        "psr-0": { "": "" }
+    },
+    "authors": [
+        {
+            "name": "Nick Stacey",
+            "email": "nick@ditt.to"
+        }
+    ]
+}
