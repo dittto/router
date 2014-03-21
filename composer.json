@@ -13,5 +13,8 @@
             "name": "Nick Stacey",
             "email": "nick@ditt.to"
         }
-    ]
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "4.0.*"
+    }
 }
