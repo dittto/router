@@ -1,7 +1,7 @@
 {
-    "name": "hydrogen/composer-test-2",
-    "description": "A test to see how composer handles autoload",
-    "version": "1.0.0",
+    "name": "hydrogen/route",
+    "description": "A plugin for managing routes",
+    "version": "0.1.0",
     "minimum-stability": "dev",
     "license": "proprietary",
     "type": "hydrogen-plugin",
