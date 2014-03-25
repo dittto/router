@@ -6,7 +6,7 @@ use Route;
 
 /**
  * Class RouteLinkTest
- * Handles test for the route link test
+ * Handles test for the route link
  *
  * @package Route\Tests
  */
