@@ -17,7 +17,7 @@ class RouteLinkTest extends \PHPUnit_Framework_TestCase {
      */
     public function testRouteLinkType() {
         $link = new Route\RouteLink();
-        $this->assertEquals(get_class($link), 'Route\RouteLink');
+        $this->assertTrue($link instanceof Route\RouteLink);
     }
 
     /**

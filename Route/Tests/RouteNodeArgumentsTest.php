@@ -17,7 +17,7 @@ class RouteNodeArgumentsTest extends \PHPUnit_Framework_TestCase {
      */
     public function testInit() {
         $node = new Route\RouteNodeArguments();
-        $this->assertEquals(get_class($node), 'Route\RouteNodeArguments');
+        $this->assertTrue($node instanceof Route\RouteNodeArguments);
     }
 
     /**

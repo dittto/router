@@ -47,11 +47,26 @@ class RouteNode {
      *
      * @param string $path The section of the url the node is meant to match
      * against
-     * @return Route\RouteNode A child node if the url path section is matched
+     * @return Route\RouteNode|Route\RouteNodeMatches A child node if the url
+     * path section is matched, or a route node matches container if the route
+     * was dynamic
      * @throws Exception\RouteMatchException If no node is matched
      */
     public function Find($path) {
+        // try and match it statically
+        try {
+            return $this->FindStatic($path);
+        } catch (Exception\RouteMatchException $e) {
+        }
 
+        // try and match it dynamically
+        try {
+            return $this->FindDynamic($path);
+        } catch (Exception\RouteMatchException $e) {
+        }
+
+        // throw an exception if not matched
+        throw new Exception\RouteMatchException('The path `'.$path.'` could not be matched');
     }
 
     /**

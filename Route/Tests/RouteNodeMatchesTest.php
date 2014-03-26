@@ -17,7 +17,7 @@ class RouteNodeMatchesTest extends \PHPUnit_Framework_TestCase {
      */
     public function testInit() {
         $node = new Route\RouteNodeMatches();
-        $this->assertEquals(get_class($node), 'Route\RouteNodeMatches');
+        $this->assertTrue($node instanceof Route\RouteNodeMatches);
     }
 
     /**

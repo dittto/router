@@ -17,7 +17,7 @@ class RouteNodeTest extends \PHPUnit_Framework_TestCase {
      */
     public function testInit() {
         $node = new Route\RouteNode();
-        $this->assertEquals(get_class($node), 'Route\RouteNode');
+        $this->assertTrue($node instanceof Route\RouteNode);
     }
 
     /**
@@ -27,7 +27,7 @@ class RouteNodeTest extends \PHPUnit_Framework_TestCase {
      * correct mock object back
      */
     public function testAddStaticValid() {
-        // init static node
+        // init node
         $node = new Route\RouteNode();
 
         // test a single node
@@ -99,7 +99,7 @@ class RouteNodeTest extends \PHPUnit_Framework_TestCase {
      * Tests that AddDynamic and FindDynamic work with valid options
      */
     public function testAddDynamicValid() {
-        // init static node
+        // init node
         $node = new Route\RouteNode();
 
         // test a single node
@@ -181,5 +181,61 @@ class RouteNodeTest extends \PHPUnit_Framework_TestCase {
         $childNode = $this->getMock('Route\RouteNode');
         $node->AddStatic('test', $childNode);
         $this->assertEquals($childNode, $node->FindStatic('not-test'));
+    }
+
+    /**
+     * Test that the Find command for both static and dynamic nodes
+     */
+    public function testFindValid() {
+        // init vars
+        $node = new Route\RouteNode();
+
+        // add routes
+        $staticNode = $this->getMock('Route\RouteNode');
+        $staticNode->static = true;
+        $dynamicNode = $this->getMock('Route\RouteNode');
+        $dynamicNode->static = false;
+        $node->AddStatic('hello', $staticNode);
+        $node->AddDynamic('hello-(\d+)', $dynamicNode, array('id'));
+
+        // test static
+        $static = $node->Find('hello');
+        $this->assertTrue($static instanceof Route\RouteNode);
+        $this->assertEquals($staticNode, $static);
+
+        // test dynamic
+        $dynamic = $node->Find('hello-47');
+        $this->assertTrue($dynamic instanceof Route\RouteNodeMatches);
+        $this->assertEquals($dynamicNode, $dynamic->GetNode());
+        $this->assertEquals(array('id' => 47), $dynamic->GetMatches());
+
+        // test that static overrides dynamic
+        $staticOverrideNode = $this->getMock('Route\RouteNode');
+        $staticOverrideNode->override = true;
+        $node->AddStatic('hello-47', $staticOverrideNode);
+        $override = $node->Find('hello-47');
+        $this->assertTrue($override instanceof Route\RouteNode);
+        $this->assertEquals($staticOverrideNode, $override);
+    }
+
+    /**
+     * Tests what happens if Find cannot match either a static or dynamic node
+     *
+     * @expectedException Route\Exception\RouteMatchException
+     */
+    public function testFindWrongPath() {
+        // init vars
+        $node = new Route\RouteNode();
+
+        // add routes
+        $staticNode = $this->getMock('Route\RouteNode');
+        $staticNode->static = true;
+        $dynamicNode = $this->getMock('Route\RouteNode');
+        $dynamicNode->static = false;
+        $node->AddStatic('hello', $staticNode);
+        $node->AddDynamic('hello-(\d+)', $dynamicNode, array('id'));
+
+        // test error
+        $static = $node->Find('hola');
     }
 }
