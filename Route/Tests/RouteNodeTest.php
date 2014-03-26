@@ -92,7 +92,7 @@ class RouteNodeTest extends \PHPUnit_Framework_TestCase {
         $node = new Route\RouteNode();
         $childNode = $this->getMock('Route\RouteNode');
         $node->AddStatic('test', $childNode);
-        $this->assertEquals($childNode, $node->FindStatic('not-test'));
+        $node->FindStatic('not-test');
     }
 
     /**
@@ -180,7 +180,7 @@ class RouteNodeTest extends \PHPUnit_Framework_TestCase {
         $node = new Route\RouteNode();
         $childNode = $this->getMock('Route\RouteNode');
         $node->AddStatic('test', $childNode);
-        $this->assertEquals($childNode, $node->FindStatic('not-test'));
+        $node->FindStatic('not-test');
     }
 
     /**
@@ -236,6 +236,79 @@ class RouteNodeTest extends \PHPUnit_Framework_TestCase {
         $node->AddDynamic('hello-(\d+)', $dynamicNode, array('id'));
 
         // test error
-        $static = $node->Find('hola');
+        $node->Find('hola');
+    }
+
+    /**
+     * Test that Get / Add verbs with valid data is valid
+     */
+    public function testVerbValid() {
+        // init vars
+        $node = new Route\RouteNode();
+
+        // add verb
+        $verb = $this->getMock('Route\RouteLink');
+        $verb->first = true;
+        $node->AddVerb('get', $verb);
+        $this->assertEquals($verb, $node->FindVerb('get'));
+
+        // add a second verb
+        $otherVerb = $this->getMock('Route\RouteLink');
+        $otherVerb->second = true;
+        $node->AddVerb('post', $otherVerb);
+        $this->assertEquals($otherVerb, $node->FindVerb('post'));
+        $this->assertEquals($verb, $node->FindVerb('get'));
+
+        // test different cases and overwriting verbs
+        $upperVerb = $this->getMock('Route\RouteLink');
+        $upperVerb->upper = true;
+        $node->AddVerb('GET', $upperVerb);
+        $this->assertEquals($upperVerb, $node->FindVerb('Get'));
+        $this->assertNotEquals($verb, $node->FindVerb('get'));
+    }
+
+    /**
+     * Tests what happens if add static is called with an empty path
+     *
+     * @expectedException Route\Exception\RouteCreateVerbException
+     */
+    public function testAddVerbEmpty() {
+        $node = new Route\RouteNode();
+        $verb = $this->getMock('Route\RouteLink');
+        $node->AddVerb('', $verb);
+    }
+
+    /**
+     * Tests what happens if add static is called with an object
+     *
+     * @expectedException Route\Exception\RouteCreateVerbException
+     */
+    public function testAddVerbObject() {
+        $node = new Route\RouteNode();
+        $verb = $this->getMock('Route\RouteLink');
+        $node->AddVerb((object)'get', $verb);
+    }
+
+    /**
+     * Tests what happens if add static is called with a null
+     *
+     * @expectedException Route\Exception\RouteCreateVerbException
+     */
+    public function testAddVerbNull() {
+        $node = new Route\RouteNode();
+        $verb = $this->getMock('Route\RouteLink');
+        $node->AddVerb(null, $verb);
+    }
+
+    /**
+     * Tests what happens if add static is called with a null
+     *
+     * @expectedException Route\Exception\RouteMatchVerbException
+     */
+    public function testFindVerbWrongVerb() {
+        $node = new Route\RouteNode();
+        $verb = $this->getMock('Route\RouteLink');
+        $node->AddVerb('get', $verb);
+        $node->FindVerb('post');
     }
 }

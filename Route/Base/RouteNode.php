@@ -129,7 +129,7 @@ class RouteNode {
 
         // throw an exception if result is still null
         if ($result === null) {
-            throw new Exception\RouteMatchException('The path `'.$path.'` could not be matches');
+            throw new Exception\RouteMatchException('The path `'.$path.'` could not be matched');
         }
 
         return $result;
@@ -147,7 +147,11 @@ class RouteNode {
      * @throws Exception\RouteMatchVerbException If no node is matched
      */
     public function FindVerb($verb) {
-
+        if (isset($this->verbs[strtolower($verb)])) {
+            return $this->verbs[strtolower($verb)];
+        } else {
+            throw new Exception\RouteMatchVerbException('The verb `'.$verb.'` could not be matched');
+        }
     }
 
     /**
@@ -166,7 +170,7 @@ class RouteNode {
         if (is_string($path) && $path !== '') {
             $this->statics[$path] = $node;
         } else {
-            throw new Exception\RouteCreateException('A static path cannot be empty and must be string');
+            throw new Exception\RouteCreateException('A static path cannot be empty and must be a string');
         }
     }
 
@@ -190,7 +194,7 @@ class RouteNode {
             $routeNode = new Route\RouteNodeArguments($node, $args);
             $this->dynamics[$regex] = $routeNode;
         } else {
-            throw new Exception\RouteCreateException('A dynamic path cannot be empty and must be string');
+            throw new Exception\RouteCreateException('A dynamic path cannot be empty and must be a string');
         }
     }
 
@@ -199,11 +203,19 @@ class RouteNode {
      * is the final node in the trie and we now need to match which controller
      * to route to
      *
-     * @param string $verb The verb to match against
-     * @param Route\RouteLink $link The object containing a link the controller the
-     * route points to
+     * @param string $verb The verb to match against. All verbs get made
+     * lowercase to make them easier to match
+     * @param Route\RouteLink $link The object containing a link the controller
+     * the route points to
+     * @throws Exception\RouteCreateVerbException Thrown if the verb is empty or
+     * not a string
      */
     public function AddVerb($verb, Route\RouteLink $link) {
-
+        // check verb is string and is not empty
+        if (is_string($verb) && $verb !== '') {
+            $this->verbs[strtolower($verb)] = $link;
+        } else {
+            throw new Exception\RouteCreateVerbException('A verb cannot be empty and must be a string');
+        }
     }
 }
