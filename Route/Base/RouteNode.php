@@ -24,21 +24,21 @@ class RouteNode {
      * name to match them on
      * @var Route\RouteNode[]
      */
-    private $statics;
+    private $statics = array();
 
     /**
      * An assoc. array of all dynamic routeNodes attached to this node and the
      * regex to match them on
      * @var Route\RouteNodeArguments[]
      */
-    private $dynamics;
+    private $dynamics = array();
 
     /**
      * An assoc. array of HTTP verbs (such as GET, POST, PUT, etc) attached to
      * a RouteLink() that will link the routes to controllers
      * @var Route\RouteLink[]
      */
-    private $verbs;
+    private $verbs = array();
 
     /**
      * Checks both the static and dynamic stores for a section of a url path,
