@@ -47,12 +47,15 @@ class RouteNode {
      *
      * @param string $path The section of the url the node is meant to match
      * against
+     * @param bool $alwaysStaticMatch Set this to try so that dynamic matches
+     * don't preg match but instead static match. Use this mode for building
+     * the tries
      * @return Route\RouteNode|Route\RouteNodeMatches A child node if the url
      * path section is matched, or a route node matches container if the route
      * was dynamic
      * @throws Exception\RouteMatchException If no node is matched
      */
-    public function Find($path) {
+    public function Find($path, $alwaysStaticMatch = false) {
         // try and match it statically
         try {
             return $this->FindStatic($path);
@@ -61,7 +64,7 @@ class RouteNode {
 
         // try and match it dynamically
         try {
-            return $this->FindDynamic($path);
+            return $this->FindDynamic($path, $alwaysStaticMatch);
         } catch (Exception\RouteMatchException $e) {
         }
 
@@ -94,16 +97,19 @@ class RouteNode {
      *
      * @param string $path The section of the url the node is meant to match
      * against
+     * @param bool $alwaysStaticMatch Set this to try so that dynamic matches
+     * don't preg match but instead static match. Use this mode for building
+     * the tries
      * @return Route\RouteNodeMatches A child node if the url path section is matched
      * @throws Exception\RouteMatchException If no node is matched
      */
-    public function FindDynamic($path) {
+    public function FindDynamic($path, $alwaysStaticMatch = false) {
         // init vars
         $result = null;
         
         // loop through the dynamics and find a match
         foreach ($this->dynamics as $regex => $nodeArgs) {
-            if (preg_match('/^'.$regex.'$/Ui', $path, $matches)) {
+            if (($alwaysStaticMatch && $regex === $path) || (!$alwaysStaticMatch && preg_match('/^'.$regex.'$/Ui', $path, $matches))) {
                 
                 // loop through the arguments and store matches. There is a +1
                 // here so we can offset the args array by 1 and start it on 0
@@ -111,7 +117,7 @@ class RouteNode {
                 $found = array();
                 $args = $nodeArgs->GetArguments();
                 foreach ($args as $key => $arg) {
-                    if (isset($matches[$key + 1]) && $arg != '') {
+                    if (!$alwaysStaticMatch && isset($matches[$key + 1]) && $arg != '') {
                         $found[$arg] = $matches[$key + 1];
                     }
                 }
