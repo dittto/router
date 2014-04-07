@@ -12,3 +12,4 @@ Go to the root directory of this install and run the following:
  - need to work out how to read that cache file though - read from given location? probably set this during site bootstrap.
  - build the tests for RouteLinkArguments and Router
  - write the code for Router::get()
+ - update RouteBuilder to allow (...) for optional parts of routes. Have this write out endpoints for each optional route section
