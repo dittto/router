@@ -5,13 +5,13 @@ namespace Route\Base;
 use Route;
 
 /**
- * Class Router
+ * Class BaseRouter
  * A class that handles taking a given url and finding out where this links to
  * in the code, or takes a route name and returns wh
  *
  * @package Route\Base
  */
-class Router {
+abstract class BaseRouter {
 
     /**
      * The start of the route trie. This represents '/'

@@ -6,7 +6,7 @@ use Route\Exception;
 use Route;
 
 /**
- * Class RouteNode
+ * Class BaseRouteNode
  * A trie node. These link to other RouteNodes if there are deeper branches of
  * possible routes to follow, and/or link to RouteLinks if there are endpoints
  * available.
@@ -18,7 +18,7 @@ use Route;
  *
  * @package Route\Base
  */
-class RouteNode {
+abstract class BaseRouteNode {
     /**
      * An assoc. array of all static routeNodes belonging to this node and the
      * name to match them on

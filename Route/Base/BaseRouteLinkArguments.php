@@ -6,13 +6,13 @@ use Route;
 use Route\Exception;
 
 /**
- * Class RouteLinkArguments
+ * Class BaseRouteLinkArguments
  * This takes and wrap a route link to provide a simple interface to all
  * arguments, module, and controller
  *
  * @package Route\Base
  */
-class RouteLinkArguments {
+abstract class BaseRouteLinkArguments {
 
     /**
      * The route link to wrap

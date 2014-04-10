@@ -2,6 +2,6 @@
 
 namespace Route\Exception;
 
-class RouteGetException extends Base\RouteGetException {
+class RouteGetException extends Base\BaseRouteGetException {
 
 }

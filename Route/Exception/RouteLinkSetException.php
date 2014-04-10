@@ -2,6 +2,6 @@
 
 namespace Route\Exception;
 
-class RouteLinkSetException extends Base\RouteLinkSetException {
+class RouteLinkSetException extends Base\BaseRouteLinkSetException {
 
 }

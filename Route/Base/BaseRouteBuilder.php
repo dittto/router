@@ -6,12 +6,12 @@ use Route;
 use Route\Exception;
 
 /**
- * Class RouteBuilder
+ * Class BaseRouteBuilder
  * Handles building a Route trie
  *
  * @package Route\Base
  */
-class RouteBuilder {
+abstract class BaseRouteBuilder {
 
     /**
      * The character used to specify the start of a variable in paths

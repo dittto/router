@@ -5,7 +5,7 @@ namespace Route\Base;
 use Route;
 
 /**
- * Class RouteNodeArguments
+ * Class BaseRouteNodeArguments
  * A store for a route node and it's corresponding arguments array. A dynamic
  * RouteNode can be of the format `article-(\d+)`, so the arguments in this
  * case would `array(0 => 'id')`.
@@ -17,7 +17,7 @@ use Route;
  *
  * @package Route\Base
  */
-class RouteNodeArguments {
+abstract class BaseRouteNodeArguments {
 
     /**
      * A store for the RouteNode

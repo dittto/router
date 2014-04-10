@@ -5,13 +5,13 @@ namespace Route\Base;
 use Route;
 
 /**
- * Class RouteNodeMatches
+ * Class BaseRouteNodeMatches
  * This is a wrapper for a dynamic route node together with it's matches, in
  * the format of array('id' => '23')
  *
  * @package Route\Base
  */
-class RouteNodeMatches {
+abstract class BaseRouteNodeMatches {
 
     /**
      * A store for the RouteNode

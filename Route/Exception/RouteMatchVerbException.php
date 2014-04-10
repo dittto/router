@@ -2,6 +2,6 @@
 
 namespace Route\Exception;
 
-class RouteMatchVerbException extends Base\RouteMatchVerbException {
+class RouteMatchVerbException extends Base\BaseRouteMatchVerbException {
 
 }

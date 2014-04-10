@@ -2,6 +2,6 @@
 
 namespace Route\Exception;
 
-class RouteCreateVerbException extends Base\RouteCreateVerbException {
+class RouteCreateVerbException extends Base\BaseRouteCreateVerbException {
 
 }

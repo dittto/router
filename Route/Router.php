@@ -6,7 +6,7 @@ namespace Route;
  * Class Router
  * @package Route
  */
-class Router extends Base\Router {
+class Router extends Base\BaseRouter {
 
     public function Test() {
         echo 'one';

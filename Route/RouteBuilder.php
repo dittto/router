@@ -6,6 +6,6 @@ namespace Route;
  * Class RouteBuilder
  * @package Route
  */
-class RouteBuilder extends Base\RouteBuilder {
+class RouteBuilder extends Base\BaseRouteBuilder {
 
 }

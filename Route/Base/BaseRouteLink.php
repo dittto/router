@@ -5,13 +5,13 @@ namespace Route\Base;
 use Route\Exception;
 
 /**
- * Class RouteLink
+ * Class BaseRouteLink
  * This stores information about a given route. These are the endpoints in the
  * RouteNode trie structure
  *
  * @package Route\Base
  */
-class RouteLink {
+abstract class BaseRouteLink {
 
     /**
      * The name of the module to use for this route
