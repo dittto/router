@@ -51,7 +51,8 @@ class RouteBuilderTest extends \PHPUnit_Framework_TestCase {
         $builder->Add('routeName', 'route-path', array(), array('get'), $testLink);
 
         // test the route name exists
-        $this->assertEquals(array('routeName' => 'route-path'), $builder->GetRouteNames());
+        $routePath = new Route\RouteName('route-path', $testLink);
+        $this->assertEquals(array('routeName' => $routePath), $builder->GetRouteNames());
 
         // test the route node contains the expected data
         $root = $builder->GetRouteRoot();
@@ -78,9 +79,9 @@ class RouteBuilderTest extends \PHPUnit_Framework_TestCase {
 
         // test the route names are valid
         $routeNames = $builder->GetRouteNames();
-        $this->assertEquals('test/[id]/article/article-[articleId]', $routeNames['testArticle']);
-        $this->assertEquals('test/[id]/gallery/[galleryId]', $routeNames['testGallery']);
-        $this->assertEquals('test', $routeNames['test']);
+        $this->assertEquals('test/[id]/article/article-[articleId]', $routeNames['testArticle']->getUrl());
+        $this->assertEquals('test/[id]/gallery/[galleryId]', $routeNames['testGallery']->getUrl());
+        $this->assertEquals('test', $routeNames['test']->GetUrl());
 
         // test the route nodes contains the expected data
         $root = $builder->GetRouteRoot();

@@ -32,9 +32,9 @@ abstract class BaseRouteBuilder {
     private $root;
 
     /**
-     * An assoc. array of route names against their urls. These are used to
-     * calculate internal paths inside the web app
-     * @var string[]
+     * An assoc. array of route names against their urls and links. These are
+     * used to calculate internal paths inside the web app
+     * @var Route\RouteName[]
      */
     private $routeNames;
 
@@ -66,7 +66,7 @@ abstract class BaseRouteBuilder {
     /**
      * Gets the array of routenames linked to their urls
      *
-     * @return string[]
+     * @return Route\RouteName[]
      */
     public function GetRouteNames() {
         return $this->routeNames;
@@ -134,7 +134,7 @@ abstract class BaseRouteBuilder {
         }
 
         // add the route name and path to the routeNames store
-        $this->routeNames[$routeName] = $path;
+        $this->routeNames[$routeName] = new Route\RouteName($path, $routeLink);
     }
 
     /**

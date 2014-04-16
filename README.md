@@ -8,11 +8,9 @@ Go to the root directory of this install and run the following:
 
 ## To do
 
+ - update RouteBuilder to allow (...) for optional parts of routes. Have this write out endpoints for each optional route section
  - create a route writer which reads from a Route root and writes out the php as a cache file
  - need to work out how to read that cache file though - read from given location? probably set this during site bootstrap.
- - build the tests for RouteLinkArguments and Router
- - write the code for Router::get()
- - update RouteBuilder to allow (...) for optional parts of routes. Have this write out endpoints for each optional route section
 
 
 $testLink = new \Route\RouteLink('Acme\Coyote\Meeper', 'Meep', array('id' => 1));
@@ -25,3 +23,7 @@ $builder->Add('test', 'test', array(), array('get'), $testLink);
 $route = new \Route\Router($builder->GetRouteRoot(), $builder->GetRouteNames());
 var_Dump($route->Find('test/12/article/article-12313', 'get'));
 var_Dump($route->Find('test', 'get'));
+
+$get = $route->Get('testArticle', array('articleId' => '12'));
+var_dump($get);
+var_Dump($route->Find($get, 'get'));
