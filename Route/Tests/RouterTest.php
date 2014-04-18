@@ -35,6 +35,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         $builder->Add('testArticle', 'test/[id]/article/article-[articleId]', array('id' => '\d+', 'articleId' => '\d+'), array('get'), $testLink);
         $builder->Add('testGallery', 'test/[id]/gallery/[galleryId]', array('id' => '\d+', 'galleryId' => '\d+'), array('post', 'get'), $testLink);
         $builder->Add('test', 'test', array(), array('get'), $testLink);
+        $builder->Add('home', '', array(), array('get'), $testLink);
+        $builder->Add('testMulti', 'test/[id](/article/article-[articleId])(/gallery/gallery-[galleryId])', array('id' => '\d+', 'articleId' => '\d+', 'galleryId' => '\d+'), array('get'), $testLink);
 
         return $builder;
     }
@@ -95,6 +97,12 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('Meep', $multiple->GetController());
         $this->assertEquals(array('id' => '1', 'galleryId' => '123124'), $multiple->GetArguments());
 
+        // test an empty route
+        $multiple = $router->Find('', 'get');
+        $this->assertEquals('Acme\Coyote\Meeper', $multiple->GetModule());
+        $this->assertEquals('Meep', $multiple->GetController());
+        $this->assertEquals(array('id' => '1'), $multiple->GetArguments());
+
     }
 
     /**
@@ -117,13 +125,15 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
         $noSlash = $router->Get('testArticle', array('articleId' => '12'), false);
         $this->assertEquals('test/1/article/article-12', $noSlash);
 
-        // test what happens if too many vars
-        $defaults = $router->Get('testArticle', array('articleId' => '12', 'wibble' => '1', 'wobble' => 'sdsdf'));
-        $this->assertEquals('/test/1/article/article-12', $defaults);
-
         // test that still works even if not matching variable type, such as \d+
         $defaults = $router->Get('testArticle', array('articleId' => 'oh-no'));
         $this->assertEquals('/test/1/article/article-oh-no', $defaults);
+
+        // test getting multiple routes
+        $this->assertEquals('/test/1/gallery/gallery-12', $router->Get('testMulti', array('galleryId' => '12')));
+        $this->assertEquals('/test/1/article/article-78', $router->Get('testMulti', array('articleId' => '78')));
+        $this->assertEquals('/test/1/article/article-78/gallery/gallery-12', $router->Get('testMulti', array('galleryId' => '12', 'articleId' => '78')));
+        $this->assertEquals('/test/1', $router->Get('testMulti'));
     }
 
     /**
@@ -138,6 +148,20 @@ class RouterTest extends \PHPUnit_Framework_TestCase {
 
         // fail by not setting the variables
         $router->Get('testArticle', array());
+    }
+
+    /**
+     * Test what happens when a variable is left out
+     *
+     * @expectedException \Route\Exception\RouteCreateException
+     */
+    public function testTooManyVars() {
+        // init router
+        $builder = $this->BuildTestRoutes();
+        $router = new Router($builder->GetRouteRoot(), $builder->GetRouteNames());
+
+        // fail by giving too many variables
+        $router->Get('testArticle', array('articleId' => '12', 'wibble' => '1', 'wobble' => 'sdsdf'));
     }
 
     /**

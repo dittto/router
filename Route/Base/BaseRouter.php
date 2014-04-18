@@ -119,33 +119,100 @@ abstract class BaseRouter {
      */
     public function Get($routeName, array $options = array(), $startWithSlash = true) {
         // match on the route name
-        $route = isset($this->routeNames[$routeName]) ? $this->routeNames[$routeName] : null;
+        $routes = isset($this->routeNames[$routeName]) ? $this->routeNames[$routeName] : null;
 
         // if no route name exists throw a get exception
-        if ($route === null) {
+        if ($routes === null) {
             throw new Route\Exception\RouteGetException('Cannot match `'.$routeName.'` route');
         }
 
-        // otherwise retrieve all of the variables from the path
-        $url = $route->GetUrl();
-        preg_match_all('/\[([a-zA-Z0-9\-\_]+)\]/Usi', $url, $matches);
-        $variables = isset($matches[1]) ? $matches[1] : array();
-        $variables = array_combine($variables, array_pad(array(), sizeof($variables), true));
+        // find a route that matches those options supplied
+        $foundUrl = null;
+        foreach ($routes as $route) {
+            // get the variables from the route
+            $url = $route->GetUrl();
+            $variables = $this->GetRouteVariables($url);
 
-        // loop through the options, update the path, and remove from the variables list
-        $mergedOptions = array_merge($route->GetRouteLink()->GetDefaultArgs(), $options);
-        foreach ($mergedOptions as $option => $value) {
-            $url = str_replace('['.$option.']', $value, $url);
-            if (isset($variables[$option])) {
-                unset($variables[$option]);
+            // get the url by replacing the variables with values
+            $matchedUrl = $this->MatchVariables($url, $variables, $options);
+            if ($matchedUrl !== null) {
+                $foundUrl = $matchedUrl;
+                break;
             }
         }
 
-        // if there are variables left over, throw a create exception
-        if (sizeof($variables) > 0) {
-            throw new Route\Exception\RouteCreateException('The route `'.$routeName.'` needs the variable(s) `'.implode('`, `', array_keys($variables)).'`');
+        // if no route can be found, search for a route that matches the
+        // options and the default options
+        if ($foundUrl === null) {
+            foreach ($routes as $route) {
+                // get the variables from the route
+                $url = $route->GetUrl();
+                $variables = $this->GetRouteVariables($url);
+
+                // get the url by replacing the variables with values
+                $matchedUrl = $this->MatchVariables($url, $variables, array_merge($route->GetRouteLink()->GetDefaultArgs(), $options));
+                if ($matchedUrl !== null) {
+                    $foundUrl = $matchedUrl;
+                    break;
+                }
+            }
         }
 
-        return ($startWithSlash ? '/' : '').$url;
+        // if no url was matched then throw an exception
+        if ($foundUrl === null) {
+            throw new Route\Exception\RouteCreateException('The route `'.$routeName.'` could not be matched with the supplied variables `'.implode('`, `', array_keys($options)).'`');
+        }
+
+        return ($startWithSlash ? '/' : '').$foundUrl;
+    }
+
+    /**
+     * Gets all the variables in a path and adds them to the keys of an array
+     * to make them easier to use
+     *
+     * @param string $url The url to get the variables out of, such as
+     * article-[articleId]
+     * @return array The found variables
+     */
+    private function GetRouteVariables($url) {
+        // retrieve all the variables from the path
+        preg_match_all('/\[([a-zA-Z0-9\-\_]+)\]/Usi', $url, $matches);
+        $variables = isset($matches[1]) ? $matches[1] : array();
+        if (sizeof($variables) > 0) {
+            $variables = array_combine($variables, array_pad(array(), sizeof($variables), true));
+        }
+
+        return $variables;
+    }
+
+    /**
+     * Loops through the variables and tries to use the options to complete the
+     * url. If the url is completed (by all variables being matched) then it
+     * will be returned, otherwise null will be
+     *
+     * @param string $url The url to replace the variables in
+     * @param array $variables The variables to attempt to replace all of
+     * @param array $options The options to try and replace all variables with
+     * @return string|null The completed url or null on failure
+     */
+    private function MatchVariables($url, array $variables, array $options) {
+        // init vars
+        $optionsList = $options;
+
+        // loop through the options to replace the variables in the url
+        foreach ($options as $option => $value) {
+            $url = str_replace('['.$option.']', $value, $url);
+            if (isset($variables[$option])) {
+                unset($variables[$option]);
+                unset($optionsList[$option]);
+            }
+        }
+
+        // if there are variables or options left over return null as it failed
+        if (sizeof($variables) > 0 || sizeof($optionsList) > 0) {
+            return null;
+        }
+
+        return $url;
     }
 }
