@@ -311,4 +311,62 @@ class RouteNodeTest extends \PHPUnit_Framework_TestCase {
         $node->AddVerb('get', $verb);
         $node->FindVerb('post');
     }
+
+    /**
+     * Test that getting all statics works
+     */
+    public function testGetStatics() {
+        // init vars
+        $node = new Route\RouteNode();
+
+        // add routes
+        $staticNode = $this->getMock('Route\RouteNode');
+        $staticNode->static = true;
+        $node->AddStatic('hello', $staticNode);
+
+        // test statics
+        $statics = $node->GetStatics();
+        $this->assertEquals(1, sizeof($statics));
+        $this->assertTrue($statics['hello'] instanceof Route\RouteNode);
+        $this->assertEquals($staticNode, $statics['hello']);
+    }
+
+    /**
+     * Test that getting all dynamics works
+     */
+    public function testGetDynamics() {
+        // init vars
+        $node = new Route\RouteNode();
+
+        // add routes
+        $dynamicNode = $this->getMock('Route\RouteNode');
+        $dynamicNode->static = false;
+        $node->AddDynamic('hello-(\d+)', $dynamicNode, array('id'));
+
+        // test dynamics
+        $dynamics = $node->GetDynamics();
+        $this->assertEquals(1, sizeof($dynamics));
+        $this->assertTrue($dynamics['hello-(\d+)'] instanceof Route\RouteNodeArguments);
+        $this->assertEquals($dynamicNode, $dynamics['hello-(\d+)']->GetNode());
+        $this->assertEquals(array('0' => 'id'), $dynamics['hello-(\d+)']->GetArguments());
+    }
+
+    /**
+     * Test that getting all verbs works
+     */
+    public function testGetVerbs() {
+        // init vars
+        $node = new Route\RouteNode();
+
+        // add verb
+        $verb = $this->getMock('Route\RouteLink');
+        $verb->first = true;
+        $node->AddVerb('get', $verb);
+
+        // test verbs
+        $verbs = $node->GetVerbs();
+        $this->assertEquals(1, sizeof($verbs));
+        $this->assertTrue($verbs['get'] instanceof Route\RouteLink);
+        $this->assertEquals($verb, $verbs['get']);
+    }
 }

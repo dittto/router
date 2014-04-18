@@ -1,5 +1,4 @@
 <?php
-
 namespace Route\Base;
 
 use Route;
@@ -7,7 +6,8 @@ use Route;
 /**
  * Class BaseRouter
  * A class that handles taking a given url and finding out where this links to
- * in the code, or takes a route name and returns wh
+ * in the code, or takes a route name and returns which module / controller to
+ * use
  *
  * @package Route\Base
  */
@@ -22,7 +22,7 @@ abstract class BaseRouter {
     /**
      * An assoc. array of route names against urls with variables in them that
      * need replacing and route links
-     * @var Route\RouteName[]
+     * @var Route\RouteName[][]
      */
     private $routeNames;
 
@@ -30,7 +30,7 @@ abstract class BaseRouter {
      * The constructor
      *
      * @param Route\RouteNode $root The start of the route trie
-     * @param Route\RouteName[] $routeNames An assoc. array of route names
+     * @param Route\RouteName[][] $routeNames An assoc. array of route names
      * against urls with variables in them that need replacing
      */
     public function __construct(Route\RouteNode $root, array $routeNames) {

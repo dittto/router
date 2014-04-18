@@ -224,4 +224,31 @@ abstract class BaseRouteNode {
             throw new Exception\RouteCreateVerbException('A verb cannot be empty and must be a string');
         }
     }
+
+    /**
+     * Returns all static nodes
+     *
+     * @return Route\RouteNode[]
+     */
+    public function GetStatics() {
+        return $this->statics;
+    }
+
+    /**
+     * Returns all dynamic nodes
+     *
+     * @return Route\RouteNodeArguments[]
+     */
+    public function GetDynamics() {
+        return $this->dynamics;
+    }
+
+    /**
+     * Returns all verbs
+     *
+     * @return Route\RouteLink[]
+     */
+    public function GetVerbs() {
+        return $this->verbs;
+    }
 }
