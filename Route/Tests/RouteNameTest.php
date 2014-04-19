@@ -5,7 +5,8 @@ use Route;
 
 /**
  * Class RouteNameTest
- * Tests the route name class. This simply holds the route link together with route urls
+ * Tests the route name class. This simply holds the route link together with
+ * route urls
  *
  * @package Route\Tests
  */
