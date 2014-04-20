@@ -111,16 +111,17 @@ abstract class BaseRouteWriter {
      */
     public function Write($filename, array $code = array()) {
         // get the code
-        if (is_empty($code)) {
+        if (empty($code)) {
             $code = $this->OutputCode();
         }
 
         // init the file
         $handle = fopen($filename, 'w+');
+        fwrite($handle, '<?php'."\n");
 
         // save the data
         foreach ($code as $line) {
-            fwrite($handle, $line."\n\r");
+            fwrite($handle, $line."\n");
         }
 
         // close the handle to the file

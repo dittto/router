@@ -35,7 +35,7 @@ class RouteWriterTest extends \PHPUnit_Framework_TestCase {
         $builder->Add('test', 'test', array(), array('get'), $testLink);
         $builder->Add('home', '', array(), array('get'), $testLink);
 
-        // init the writer and fake the output
+        // init the writer and fake the output being written to cache and then parsed
         $rootNode = $routes = '';
         $writer = new RouteWriter($builder->GetRouteRoot(), $builder->GetRouteNames());
         $code = $writer->OutputCode();
