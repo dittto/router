@@ -69,6 +69,17 @@ abstract class BaseRouterInit implements RouterInterface {
     }
 
     /**
+     * Gets a uri from a route name and options
+     *
+     * @param string $name The name of the route to retrieve
+     * @param string[] $options The options to use to build the uri
+     * @return string
+     */
+    public function Get($name, array $options = array()) {
+        return $this->router->Get($name, $options);
+    }
+
+    /**
      * The namespace of the controller to use
      *
      * @return string
