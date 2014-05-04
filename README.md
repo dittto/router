@@ -58,6 +58,7 @@ Lastly you need either a url or a route name and arguments to retrieve data from
 
     echo $testArticle->GetArguments();
     // returns "array('id' => '12', 'articleId' => '12313')"
+```
 
 For more examples, have a look at the Test files, especially the RouteLinkTest, RouteBuilderTest, and the RouterTest pages.
 
